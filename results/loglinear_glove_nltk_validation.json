@@ -1,0 +1,12 @@
+{
+  "tokenizer": "nltk",
+  "model": "loglinear",
+  "features": "glove",
+  "min_words": 1,
+  "max_iter": 500,
+  "accuracies": [
+    [
+      0.7729357798165137
+    ]
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "tokenizer": "nltk",
+  "model": "loglinear",
+  "features": "indicator",
+  "seeds": [
+    0
+  ],
+  "k": 5,
+  "min_words": 1,
+  "cv": "parents",
+  "accuracies": [
+    [
+      0.803921568627451,
+      0.8002904865649964,
+      0.8242556281771968,
+      0.8169934640522876,
+      0.7988380537400145
+    ]
+  ]
+}

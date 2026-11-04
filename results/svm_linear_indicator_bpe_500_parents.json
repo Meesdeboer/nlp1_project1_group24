@@ -1,0 +1,24 @@
+{
+  "tokenizer": "bpe_500",
+  "model": "svm_linear",
+  "features": "indicator",
+  "seeds": [
+    0
+  ],
+  "k": 5,
+  "min_words": 1,
+  "cv": "parents",
+  "svm_args": {
+    "C": 1.0,
+    "gamma": "scale"
+  },
+  "accuracies": [
+    [
+      0.7044299201161947,
+      0.6935366739288308,
+      0.7233115468409586,
+      0.7254901960784313,
+      0.7109658678286129
+    ]
+  ]
+}

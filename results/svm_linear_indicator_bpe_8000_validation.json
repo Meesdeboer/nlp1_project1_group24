@@ -1,0 +1,15 @@
+{
+  "tokenizer": "bpe_8000",
+  "model": "svm_linear",
+  "features": "indicator",
+  "min_words": 1,
+  "svm_args": {
+    "C": 1.0,
+    "gamma": "scale"
+  },
+  "accuracies": [
+    [
+      0.7924311926605505
+    ]
+  ]
+}

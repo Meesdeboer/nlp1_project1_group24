@@ -1,0 +1,10 @@
+{
+  "tokenizer": "nltk",
+  "model": "loglinear",
+  "features": "bow",
+  "accuracies": [
+    [
+      0.8084862385321101
+    ]
+  ]
+}

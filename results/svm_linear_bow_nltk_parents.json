@@ -1,0 +1,24 @@
+{
+  "tokenizer": "nltk",
+  "model": "svm_linear",
+  "features": "bow",
+  "seeds": [
+    0
+  ],
+  "k": 5,
+  "min_words": 1,
+  "cv": "parents",
+  "svm_args": {
+    "C": 1.0,
+    "gamma": "scale"
+  },
+  "accuracies": [
+    [
+      0.7770515613652869,
+      0.7872185911401598,
+      0.8024691358024691,
+      0.7857661583151779,
+      0.7864923747276689
+    ]
+  ]
+}

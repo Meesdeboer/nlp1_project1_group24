@@ -1,0 +1,10 @@
+{
+  "tokenizer": "bpe_20000",
+  "model": "loglinear",
+  "features": "indicator",
+  "accuracies": [
+    [
+      0.8268348623853211
+    ]
+  ]
+}

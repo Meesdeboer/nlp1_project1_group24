@@ -1,0 +1,17 @@
+jupyter
+ipykernel
+ipywidgets
+numpy
+scipy
+matplotlib
+pandas
+seaborn
+nltk
+scikit-learn
+torch
+tokenizers
+datasets
+tabulate
+tqdm
+baycomp
+certifi
