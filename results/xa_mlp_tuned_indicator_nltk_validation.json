@@ -1,0 +1,20 @@
+{
+  "tokenizer": "nltk",
+  "model": "mlp_tuned",
+  "features": "indicator",
+  "mlp_args": {
+    "dropout": 0.3,
+    "batch_size": 64,
+    "weight_decay": 0.01,
+    "num_epochs": 10,
+    "patience": 2,
+    "learning_rate": 0.001,
+    "hidden_dim": 128,
+    "layers": 1
+  },
+  "accuracies": [
+    [
+      0.8096330275229358
+    ]
+  ]
+}

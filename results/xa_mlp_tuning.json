@@ -1,0 +1,194 @@
+{
+  "layers=1/indicator/lr=0.0001/h=32": {
+    "layers": 1,
+    "features": "indicator",
+    "learning_rate": 0.0001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8163636363636364,
+    "best epoch": 4
+  },
+  "layers=1/indicator/lr=0.0001/h=128": {
+    "layers": 1,
+    "features": "indicator",
+    "learning_rate": 0.0001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8254545454545454,
+    "best epoch": 7
+  },
+  "layers=1/indicator/lr=0.001/h=32": {
+    "layers": 1,
+    "features": "indicator",
+    "learning_rate": 0.001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8254545454545454,
+    "best epoch": 2
+  },
+  "layers=1/indicator/lr=0.001/h=128": {
+    "layers": 1,
+    "features": "indicator",
+    "learning_rate": 0.001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8418181818181818,
+    "best epoch": 4
+  },
+  "layers=1/bow/lr=0.0001/h=32": {
+    "layers": 1,
+    "features": "bow",
+    "learning_rate": 0.0001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8181818181818182,
+    "best epoch": 6
+  },
+  "layers=1/bow/lr=0.0001/h=128": {
+    "layers": 1,
+    "features": "bow",
+    "learning_rate": 0.0001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8145454545454546,
+    "best epoch": 5
+  },
+  "layers=1/bow/lr=0.001/h=32": {
+    "layers": 1,
+    "features": "bow",
+    "learning_rate": 0.001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8236363636363636,
+    "best epoch": 2
+  },
+  "layers=1/bow/lr=0.001/h=128": {
+    "layers": 1,
+    "features": "bow",
+    "learning_rate": 0.001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8363636363636363,
+    "best epoch": 4
+  },
+  "layers=1/glove/lr=0.0001/h=32": {
+    "layers": 1,
+    "features": "glove",
+    "learning_rate": 0.0001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8145454545454546,
+    "best epoch": 8
+  },
+  "layers=1/glove/lr=0.0001/h=128": {
+    "layers": 1,
+    "features": "glove",
+    "learning_rate": 0.0001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8036363636363636,
+    "best epoch": 2
+  },
+  "layers=1/glove/lr=0.001/h=32": {
+    "layers": 1,
+    "features": "glove",
+    "learning_rate": 0.001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8181818181818182,
+    "best epoch": 2
+  },
+  "layers=1/glove/lr=0.001/h=128": {
+    "layers": 1,
+    "features": "glove",
+    "learning_rate": 0.001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8181818181818182,
+    "best epoch": 2
+  },
+  "layers=2/indicator/lr=0.0001/h=32": {
+    "layers": 2,
+    "features": "indicator",
+    "learning_rate": 0.0001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8236363636363636,
+    "best epoch": 3
+  },
+  "layers=2/indicator/lr=0.0001/h=128": {
+    "layers": 2,
+    "features": "indicator",
+    "learning_rate": 0.0001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.82,
+    "best epoch": 4
+  },
+  "layers=2/indicator/lr=0.001/h=32": {
+    "layers": 2,
+    "features": "indicator",
+    "learning_rate": 0.001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8327272727272728,
+    "best epoch": 5
+  },
+  "layers=2/indicator/lr=0.001/h=128": {
+    "layers": 2,
+    "features": "indicator",
+    "learning_rate": 0.001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8472727272727273,
+    "best epoch": 3
+  },
+  "layers=2/bow/lr=0.0001/h=32": {
+    "layers": 2,
+    "features": "bow",
+    "learning_rate": 0.0001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8218181818181818,
+    "best epoch": 3
+  },
+  "layers=2/bow/lr=0.0001/h=128": {
+    "layers": 2,
+    "features": "bow",
+    "learning_rate": 0.0001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8218181818181818,
+    "best epoch": 4
+  },
+  "layers=2/bow/lr=0.001/h=32": {
+    "layers": 2,
+    "features": "bow",
+    "learning_rate": 0.001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8290909090909091,
+    "best epoch": 1
+  },
+  "layers=2/bow/lr=0.001/h=128": {
+    "layers": 2,
+    "features": "bow",
+    "learning_rate": 0.001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.84,
+    "best epoch": 5
+  },
+  "layers=2/glove/lr=0.0001/h=32": {
+    "layers": 2,
+    "features": "glove",
+    "learning_rate": 0.0001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8018181818181818,
+    "best epoch": 4
+  },
+  "layers=2/glove/lr=0.0001/h=128": {
+    "layers": 2,
+    "features": "glove",
+    "learning_rate": 0.0001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8272727272727273,
+    "best epoch": 5
+  },
+  "layers=2/glove/lr=0.001/h=32": {
+    "layers": 2,
+    "features": "glove",
+    "learning_rate": 0.001,
+    "hidden_dim": 32,
+    "inner-slice accuracy": 0.8272727272727273,
+    "best epoch": 5
+  },
+  "layers=2/glove/lr=0.001/h=128": {
+    "layers": 2,
+    "features": "glove",
+    "learning_rate": 0.001,
+    "hidden_dim": 128,
+    "inner-slice accuracy": 0.8290909090909091,
+    "best epoch": 2
+  }
+}

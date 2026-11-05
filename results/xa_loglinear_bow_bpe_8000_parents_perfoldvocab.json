@@ -1,0 +1,21 @@
+{
+  "tokenizer": "bpe_8000",
+  "model": "loglinear",
+  "features": "bow",
+  "seeds": [
+    0
+  ],
+  "k": 5,
+  "cv": "parents",
+  "max_iter": 500,
+  "vocabulary": "per fold",
+  "accuracies": [
+    [
+      0.7959331880900509,
+      0.7872185911401598,
+      0.8155410312273057,
+      0.8061002178649237,
+      0.7792302106027597
+    ]
+  ]
+}

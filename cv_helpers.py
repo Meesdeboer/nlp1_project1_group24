@@ -55,8 +55,32 @@ def cv_loglinear(X, y, folds, max_iter=100, scale=False):
             for train_idx, val_idx in tqdm(folds, desc="folds")]
 
 
+ACTIVATIONS = {"relu": nn.ReLU, "tanh": nn.Tanh, "sigmoid": nn.Sigmoid, "gelu": nn.GELU,
+               "leaky_relu": nn.LeakyReLU, "identity": nn.Identity}
+
+
+class DeepSparseMLP(nn.Module):
+    """
+    Two-hidden-layer variant of the tutorial's SparseMLP: sparse input -> hidden -> hidden -> log-probabilities,
+    with ReLU and dropout after each hidden layer.
+    """
+
+    def __init__(self, input_dim, hidden_dim, num_classes, dropout=0.2):
+        super().__init__()
+        self.first = smlp.SparseMLP(input_dim, hidden_dim, hidden_dim, dropout)
+        self.first.output = nn.Identity()   # keep the sparse first layer (+ ReLU + dropout), drop its output head
+        self.rest = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim), nn.ReLU(), nn.Dropout(dropout),
+            nn.Linear(hidden_dim, num_classes), nn.LogSoftmax(dim=-1),
+        )
+
+    def forward(self, x):
+        return self.rest(self.first(x))
+
+
 def cv_mlp(X, y, folds, texts=None, hidden_dim=128, dropout=0.1, batch_size=64, learning_rate=1e-4,
-           weight_decay=1e-4, num_epochs=10, seed=0, device="cpu", epochs_out=None, scale=False):
+           weight_decay=1e-4, num_epochs=10, seed=0, device="cpu", epochs_out=None, scale=False,
+           layers=1, patience=None, activation="relu"):
     """
     Accuracy per fold of a single-hidden-layer MLP (the tutorial's SparseMLP and training loop).
 
@@ -67,13 +91,17 @@ def cv_mlp(X, y, folds, texts=None, hidden_dim=128, dropout=0.1, batch_size=64, 
         None picks the slice at random (use with random folds)
     epochs_out: optional list; the chosen epoch (1-based) of every fold is appended to it
     scale: standardise dense features with the mean and spread of the fold's training rows
+    layers: 1 (the tutorial's SparseMLP) or 2 (DeepSparseMLP)
+    patience: stop when the inner-slice accuracy has not improved for this many epochs (None: train all epochs)
+    activation: hidden-layer non-linearity, a key of ACTIVATIONS ("identity" makes the MLP a linear model)
     """
     accuracies = []
     for fold, (train_idx, val_idx) in enumerate(tqdm(folds, desc="folds")):
         torch.manual_seed(seed * 1000 + fold)
         accuracy, epoch, _ = _train_and_select(
             X, y, train_idx, X[val_idx], y[val_idx], texts, seed * 1000 + fold,
-            hidden_dim, dropout, batch_size, learning_rate, weight_decay, num_epochs, device, scale=scale)
+            hidden_dim, dropout, batch_size, learning_rate, weight_decay, num_epochs, device, scale=scale,
+            layers=layers, patience=patience, activation=activation)
         accuracies.append(accuracy)
         if epochs_out is not None:
             epochs_out.append(epoch)
@@ -123,15 +151,18 @@ def cv_svm(X, y, folds, kernel="rbf", C=1.0, gamma="scale", scale=True):
 
 
 def eval_mlp(X_train, y_train, X_eval, y_eval, texts=None, hidden_dim=128, dropout=0.1, batch_size=64,
-             learning_rate=1e-4, weight_decay=1e-4, num_epochs=10, seed=0, device="cpu", scale=False):
+             learning_rate=1e-4, weight_decay=1e-4, num_epochs=10, seed=0, device="cpu", scale=False,
+             layers=1, patience=None, activation="relu", predictions_out=None):
     """
     Train the MLP on the train rows and return its accuracy on X_eval at the epoch chosen on an inner
     validation slice of the train rows (as in cv_mlp). X_eval plays no part in the choice.
+    predictions_out: optional list; filled with the predicted labels for X_eval at the chosen epoch
     """
     torch.manual_seed(seed)
     accuracy, _, _ = _train_and_select(
         X_train, y_train, np.arange(len(y_train)), X_eval, y_eval, texts, seed,
-        hidden_dim, dropout, batch_size, learning_rate, weight_decay, num_epochs, device, scale=scale)
+        hidden_dim, dropout, batch_size, learning_rate, weight_decay, num_epochs, device, scale=scale,
+        layers=layers, patience=patience, activation=activation, predictions_out=predictions_out)
     return accuracy
 
 
@@ -247,7 +278,8 @@ def inner_split(train_idx, texts=None, frac=0.1, seed=0):
 
 
 def _train_and_select(X, y, train_idx, eval_X, eval_y, texts, split_seed, hidden_dim, dropout, batch_size,
-                      learning_rate, weight_decay, num_epochs, device, record_history=False, scale=False):
+                      learning_rate, weight_decay, num_epochs, device, record_history=False, scale=False,
+                      layers=1, patience=None, activation="relu", predictions_out=None):
     """
     Train the MLP on the fit part of train_idx, choose the epoch with the best accuracy on the inner
     validation slice (the earliest one on ties), and return (accuracy on the eval set at that epoch,
@@ -265,7 +297,15 @@ def _train_and_select(X, y, train_idx, eval_X, eval_y, texts, split_seed, hidden
     select_loader = loader(X[select_idx], y[select_idx], False)
     eval_loader = loader(eval_X, eval_y, False)
 
-    model = smlp.SparseMLP(X.shape[1], hidden_dim, len(np.unique(y)), dropout).to(device)
+    model_class = {1: smlp.SparseMLP, 2: DeepSparseMLP}[layers]
+    model = model_class(X.shape[1], hidden_dim, len(np.unique(y)), dropout)
+    if activation != "relu":   # both MLPs use ReLU by default; swap it for the requested non-linearity
+        if layers == 1:
+            model.activation = ACTIVATIONS[activation]()
+        else:
+            model.first.activation = ACTIVATIONS[activation]()
+            model.rest[1] = ACTIVATIONS[activation]()
+    model = model.to(device)
     criterion = nn.NLLLoss()
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
@@ -274,10 +314,14 @@ def _train_and_select(X, y, train_idx, eval_X, eval_y, texts, split_seed, hidden
         train_metrics = smlp.train_one_epoch(model, fit_loader, optimizer, criterion, device)
         select_metrics, _ = smlp.evaluate(model, select_loader, criterion, device)
         improved = select_metrics["accuracy"] > best_select
-        eval_metrics = smlp.evaluate(model, eval_loader, criterion, device)[0] if (improved or record_history) else None
+        eval_metrics, eval_preds = smlp.evaluate(model, eval_loader, criterion, device) if (improved or record_history) else (None, None)
         if improved:
             best_select, chosen_epoch, chosen_accuracy = select_metrics["accuracy"], epoch, eval_metrics["accuracy"]
+            if predictions_out is not None:
+                predictions_out[:] = list(eval_preds)
         history.append({"train": train_metrics, "select": select_metrics, "heldout": eval_metrics})
+        if patience is not None and epoch - chosen_epoch >= patience:
+            break   # early stopping: no improvement on the inner slice for `patience` epochs
     return chosen_accuracy, chosen_epoch, history
 
 
@@ -295,7 +339,9 @@ def build_features(df, tokenizer, features):
         if not _GLOVE:
             _GLOVE["glove"] = embeddings.load_glove()
         word_to_row, matrix = _GLOVE["glove"]
-        return embeddings.average_embeddings(df.tokens, word_to_row, matrix), True
+        # the raw NLTK words (column `text`), not `tokens`: the stored tokens mark words unseen in train as [UNK],
+        # which has no GloVe vector, although GloVe knows most of those words (identical for train rows)
+        return embeddings.average_embeddings([t.split() for t in df.text], word_to_row, matrix), True
     return make_features(df.ids, tokenizer.get_vocab_size(), features == "indicator"), False
 
 

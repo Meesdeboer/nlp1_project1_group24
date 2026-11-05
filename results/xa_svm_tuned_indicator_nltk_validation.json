@@ -1,0 +1,11 @@
+{
+  "tokenizer": "nltk",
+  "model": "svm_tuned",
+  "features": "indicator",
+  "C": 0.3,
+  "accuracies": [
+    [
+      0.8130733944954128
+    ]
+  ]
+}
